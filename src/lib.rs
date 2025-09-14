@@ -829,7 +829,7 @@ impl<'a> PdfFont for PdfSimpleFont<'a> {
                     warn!("missing char {:?} in unicode map {:?} for {:?}", char, unicode_map, self.font);
                     // some pdf's like http://arxiv.org/pdf/2312.00064v1 are missing entries in their unicode map but do have
                     // entries in the encoding.
-                    let encoding = self.encoding.as_ref().map(|x| &x[..]).expect("missing unicode map and encoding");
+                    let encoding = self.encoding.as_ref().map(|x| &x[..]).unwrap_or(&PDFDocEncoding);
                     let s = to_utf8(encoding, &slice);
                     warn!("falling back to encoding {} -> {:?}", char, s);
                     s

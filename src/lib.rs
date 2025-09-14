@@ -388,7 +388,12 @@ impl<'a> PdfSimpleFont<'a> {
                     Some(&Object::Stream(ref s)) => {
                         let s = get_contents(s);
                         //dlog!("font contents {:?}", pdf_to_utf8(&s));
-                        type1_encoding = Some(type1_encoding_parser::get_encoding_map(&s).expect("encoding"));
+                        match type1_encoding_parser::get_encoding_map(&s) {
+                            Ok(encoding_map) => type1_encoding = Some(encoding_map),
+                            Err(e) => {
+                                warn!("Failed to parse Type1 encoding: {}", e);
+                            }
+                        }
                     }
                     _ => { dlog!("font file {:?}", file) }
                 }
